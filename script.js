@@ -85,6 +85,8 @@ function showReview() {
 document.getElementById('wifeApplication').addEventListener('submit', async function (e) {
     e.preventDefault();
 
+    let flag = false;
+
     if (!validateSection(currentSection)) return;
 
     const formData = new FormData(this);
@@ -94,7 +96,13 @@ document.getElementById('wifeApplication').addEventListener('submit', async func
         document.cookie = `${encodeURIComponent(key)}=${encodeURIComponent(value)}; path=/; max-age=${60 * 60 * 24 * 365 * 100}`; // 100 years
     });
 
-    await generatePDF(data);
+    // Validate all sections before proceeding
+    if (!flag){
+        await generatePDF(data);
+        flag = true;
+
+    }
+    
 
     // Show modal instead of alert
     const modal = document.getElementById('successModal');
@@ -103,6 +111,7 @@ document.getElementById('wifeApplication').addEventListener('submit', async func
     function closeModal() {
         modal.style.display = 'none';
         // document.getElementById('wifeApplication').reset();
+        
         location.reload(); // Cookies remain
     }
 
@@ -173,10 +182,17 @@ window.onload = () => {
         let key = decodeURIComponent(rawKey.trim());
         let value = decodeURIComponent(rawValue);
 
+        // Do not prefill signature or acceptasHusband
+        if (key === 'signature' || key === 'acceptasHusband') return;
+
         let input = form.elements[key];
         if (input) 
             input.value = value;
     });
+
+    // Remove signature and acceptasHusband cookies after reload
+    document.cookie = 'signature=; path=/; max-age=0';
+    document.cookie = 'acceptasHusband=; path=/; max-age=0';
 
     updateProgress();
 
@@ -185,3 +201,33 @@ window.onload = () => {
         firstInput.focus();
     }
 };
+
+
+document.addEventListener('DOMContentLoaded', function() {
+        const dobInput = document.querySelector('input[name="dob"]');
+        const ageInput = document.getElementById('age');
+        if (dobInput && ageInput) {
+            function calculateAge() {
+                const dob = new Date(dobInput.value);
+                if (!isNaN(dob.getTime())) {
+                    const today = new Date();
+                    let age = today.getFullYear() - dob.getFullYear();
+                    const m = today.getMonth() - dob.getMonth();
+                    if (m < 0 || (m === 0 && today.getDate() < dob.getDate())) {
+                        age--;
+                    }
+                    ageInput.value = age > 0 ? age : '';
+                } else {
+                    ageInput.value = '';
+                }
+            }
+            dobInput.addEventListener('change', calculateAge);
+            dobInput.addEventListener('input', calculateAge);
+            // If dob is prefilled (from cookies), calculate age on load
+            calculateAge();
+        }
+    });
+
+
+
+    
