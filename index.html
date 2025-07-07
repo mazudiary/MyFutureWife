@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>My Future Wife</title>
+    <title>Future Wife Application</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <link rel="stylesheet" href="styles.css" />
     <link href="https://fonts.googleapis.com/css?family=Dancing+Script&display=swap" rel="stylesheet">
 </head>
 <body>
     <div class="container">
-        <h1>❤️My Future Wife ❤️</h1>
+        <h1>❤️ Future Wife Application ❤️</h1>
         <p>Please fill the application completely for our love story to begin.</p>
         <div class="progress-bar">
             <div class="progress" id="progress"></div>
@@ -112,8 +112,8 @@
             <div class="form-section" id="section3">
                 <h2>Physical Details</h2>
 
-                <label>Age:</label>
-                <input type="number" name="age" min="0" required />
+                <label>Age (Automatically calculated based on Date of Birth):</label>
+                <input type="number" name="age" id="age" min="0" required readonly style="background:#f5f5f5; cursor:not-allowed;" />
                 <div class="error-message" id="error-age"></div>
 
                 <label>Height:</label>
@@ -224,6 +224,5 @@
         </form>
 
     <script src="script.js"></script>
-
 </body>
 </html>
